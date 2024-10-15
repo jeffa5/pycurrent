@@ -1,0 +1,13 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "current"
+version = "0.0.1"
+authors = [
+  { name="Andrew Jeffery", email="dev@jeffas.net" },
+]
+readme = "README.md"
+requires-python = ">=3.8"
