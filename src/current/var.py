@@ -32,7 +32,7 @@ class Var:
 class CachedVar(Var):
     def __init__(self, val, name="cvar"):
         super().__init__(val, name=name)
-        self.modified = True
+        self.modified = False
 
     def update(self, val):
         if val == self.value:

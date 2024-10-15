@@ -28,9 +28,10 @@ def propagate(*args):
     logger.debug("Built dependency graph")
     logger.debug("Doing propagation")
 
-    q = deque(changed_args)
+    # node and whether to refresh it
+    q = deque([(c, True) for c in changed_args])
     while q:
-        node = q.popleft()
+        node, refresh = q.popleft()
         if node not in g:
             logger.debug("Skipping %r as already processed", node.name)
             # already processed
@@ -38,17 +39,22 @@ def propagate(*args):
         if deps[node]:
             # not ready yet
             logger.debug("Skipping %r as not all depencies are satisfied", node.name)
-            q.append(node)
+            if len(q) == 0:
+                raise Exception("re-adding element would lead to infinite cycle")
+            q.append((node, refresh))
             continue
 
-        logger.debug("Refreshing %r", node.name)
-        g.remove(node)
 
-        node.refresh()
+        if refresh:
+            logger.debug("Refreshing %r", node.name)
+            g.remove(node)
+            node.refresh()
+        else:
+            logger.debug("Not refreshing %r", node.name)
 
         for reader in node.readers:
             if reader in deps:
                 deps[reader].remove(node)
-            q.append(reader)
+            q.append((reader, node._changed()))
 
     logger.debug("Done propagation")

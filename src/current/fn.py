@@ -1,9 +1,7 @@
-from current.var import Var
+from current.var import Var, CachedVar
 
-
-class Fn(Var):
-    def __init__(self, f, *args, name="fn"):
-        super().__init__(None, name=name)
+class BaseFn:
+    def __init__(self, f, *args):
         self.f = f
         self.args = args
         for arg in args:
@@ -33,5 +31,16 @@ class Fn(Var):
                 arg_values.append(arg.get())
             else:
                 arg_values.append(arg)
-        self.value = self.f(*arg_values)
+        self.update(self.f(*arg_values))
 
+
+class Fn(BaseFn, Var):
+    def __init__(self, f, *args, name="fn"):
+        Var.__init__(self, None, name=name)
+        BaseFn.__init__(self, f, *args)
+
+
+class CachedFn(BaseFn, CachedVar):
+    def __init__(self, f, *args, name="cfn"):
+        CachedVar.__init__(self, None, name=name)
+        BaseFn.__init__(self, f, *args)
