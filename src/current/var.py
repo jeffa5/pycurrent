@@ -15,7 +15,7 @@ class Var:
         self.modified = True
         self.value = val
 
-    def refresh(self) -> bool:
+    def refresh(self):
         """
         Refresh the value in this variable.
         """
