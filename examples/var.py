@@ -1,19 +1,18 @@
 import logging
 
-from current import CachedFn, CachedVar, Fn, Var, graph, propagate
+from current import Fn, Var, graph, propagate
 
 logging.basicConfig(level=logging.INFO)
 
 x = Var(1, name="x")
-y = CachedVar(1, name="y")
+y = Var(1, name="y")
 z = Fn(lambda v: v, y, name="yz")
-a = CachedVar(1, name="a")
+a = Var(1, name="a")
 b = Fn(lambda a: a + 1, a, name="b")
 mul = Fn(lambda x, z, b: print(x, z, b, x * z * b), x, z, b, name="mul")
 add = Fn(lambda x: x + 1, x, name="add")
-i = CachedFn(lambda x: 2, x, name="const")
+i = Fn(lambda x: 2, x, name="const")
 j = Fn(lambda x: print("id val", x), i, name="print id")
-# mul.with_args(z, b, 2)
 
 # graph(a, x, y)
 #

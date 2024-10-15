@@ -1,4 +1,4 @@
-from .fn import Fn, CachedFn
-from .var import Var, CachedVar
+from .fn import Fn
+from .var import Var
 from .graph import graph
 from .propagate import propagate

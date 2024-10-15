@@ -6,12 +6,10 @@ logger = logging.getLogger(__name__)
 
 def propagate(*args):
     logger.debug("Building dependency graph")
-    changed_args = [a for a in args if a._changed()]
-    for arg in changed_args:
-        arg._seen_change()
+
     g = set()
     deps = defaultdict(set)
-    q = deque(changed_args)
+    q = deque(args)
     while q:
         node = q.popleft()
         if node in g:
@@ -29,7 +27,7 @@ def propagate(*args):
     logger.debug("Doing propagation")
 
     # node and whether to refresh it
-    q = deque([(c, True) for c in changed_args])
+    q = deque([(c, True) for c in args])
     while q:
         node, refresh = q.popleft()
         if node not in g:
@@ -44,7 +42,6 @@ def propagate(*args):
             q.append((node, refresh))
             continue
 
-
         if refresh:
             logger.debug("Refreshing %r", node.name)
             g.remove(node)
@@ -52,9 +49,13 @@ def propagate(*args):
         else:
             logger.debug("Not refreshing %r", node.name)
 
+        logger.debug("After refresh, node changed %r", node._changed())
+
         for reader in node.readers:
             if reader in deps:
                 deps[reader].remove(node)
             q.append((reader, node._changed()))
+
+        node._seen_change()
 
     logger.debug("Done propagation")
