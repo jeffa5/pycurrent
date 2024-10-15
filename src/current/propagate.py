@@ -22,7 +22,7 @@ def propagate(*args):
             q.append(reader)
 
     logger.debug("Built dependency graph")
-    logger.debug("Doing propogation")
+    logger.debug("Doing propagation")
 
     q = deque(args)
     while q:
@@ -46,4 +46,4 @@ def propagate(*args):
                 deps[reader].remove(node)
             q.append(reader)
 
-    logger.debug("Done propogation")
+    logger.debug("Done propagation")
