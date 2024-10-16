@@ -1,5 +1,8 @@
 from current.var import Var
 from current.utils import List
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Fn(Var):
     def __init__(self, f, *args, name="fn", **kwargs):
@@ -20,6 +23,7 @@ class Fn(Var):
         self.update(val)
 
     def _evaluate(self):
+        logger.debug("Evaluating fn %r", self.name)
         arg_values = []
         for arg in self.args:
             if isinstance(arg, Var):
